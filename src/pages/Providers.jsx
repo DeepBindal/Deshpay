@@ -1,17 +1,20 @@
 import React, { useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { CATEGORIES, PROVIDERS } from "../data/mock";
+import { FileJson } from "lucide-react";
+import { logoUrlByDomain, logoUrlByName } from "../utils/logos";
 
 export default function Providers() {
   const { category } = useParams();
   const nav = useNavigate();
+  const [q, setQ] = useState("");
 
   const cat = useMemo(
     () => CATEGORIES.find((c) => c.id === category),
     [category],
   );
+
   const list = PROVIDERS[category] || [];
-  const [q, setQ] = useState("");
 
   const filtered = useMemo(() => {
     const s = q.trim().toLowerCase();
@@ -25,26 +28,42 @@ export default function Providers() {
 
   if (!cat) {
     return (
-      <div className="rounded-[28px] border border-white/10 bg-white/5 p-6">
-        <div className="text-lg font-extrabold">Unknown category</div>
+      <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="text-lg font-extrabold text-slate-900">
+          Unknown category
+        </div>
       </div>
     );
   }
 
+  const groupedByRegion = useMemo(() => {
+    const map = {};
+
+    filtered.forEach((p) => {
+      const region = p.region || "Other";
+      if (!map[region]) map[region] = [];
+      map[region].push(p);
+    });
+
+    return map;
+  }, [filtered]);
+
   return (
-    <div className="space-y-4">
-      <div className="rounded-[28px] border border-white/10 bg-white/5 p-5 shadow-soft">
+    <div className="space-y-5">
+      {/* Header */}
+      <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div>
-            <div className="text-lg font-extrabold">
+            <div className="text-lg font-extrabold text-slate-900">
               Choose {cat.label} provider
             </div>
-            <div className="text-sm text-white/60">
-              Search and select a biller.
+            <div className="text-sm text-slate-500">
+              Search and select a biller
             </div>
           </div>
+
           <input
-            className="w-full md:w-96 rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm outline-none placeholder:text-white/30"
+            className="w-full md:w-96 rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
             placeholder="Search provider…"
             value={q}
             onChange={(e) => setQ(e.target.value)}
@@ -52,26 +71,85 @@ export default function Providers() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {filtered.map((p) => (
-          <button
-            key={p.id}
-            onClick={() =>
-              nav(`/pay/${category}?providerId=${encodeURIComponent(p.id)}`)
-            }
-            className="text-left rounded-[28px] border border-white/10 bg-white/5 p-5 shadow-soft hover:bg-white/10 transition"
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <div className="text-sm font-extrabold">{p.name}</div>
-                <div className="mt-1 text-xs text-white/60">{p.region}</div>
-              </div>
-              <span className="rounded-2xl bg-black/20 px-2 py-1 text-[11px] text-white/70">
-                {p.tags?.[0] || "Available"}
+      <div className="space-y-6">
+        {Object.entries(groupedByRegion).map(([region, providers]) => (
+          <div key={region} className="space-y-3">
+            {/* Region header */}
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-extrabold text-slate-700">
+                {region}
+              </h3>
+              <span className="text-xs text-slate-400">
+                {providers.length} provider{providers.length > 1 ? "s" : ""}
               </span>
             </div>
-            <div className="mt-4 text-xs text-white/55">Tap to continue →</div>
-          </button>
+
+            {/* Cards */}
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {providers.map((p) => {
+                const logo = p.domain
+                  ? logoUrlByDomain(p.domain, { theme: "light", size: 64 })
+                  : logoUrlByName(p.name, { theme: "light", size: 64 });
+
+                return (
+                  <button
+                    key={p.id}
+                    onClick={() =>
+                      nav(
+                        `/pay/${category}?providerId=${encodeURIComponent(p.id)}`,
+                      )
+                    }
+                    className="
+                group relative text-left rounded-3xl border border-slate-200
+                bg-white p-5 shadow-sm transition
+                hover:-translate-y-0.5 hover:shadow-md
+                hover:border-indigo-300 focus:outline-none
+                focus:ring-2 focus:ring-indigo-200
+              "
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      {/* Left */}
+                      <div className="flex gap-4">
+                        {/* Logo */}
+                        <div className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-slate-100">
+                          <img
+                            src={logo}
+                            alt={p.name}
+                            loading="lazy"
+                            className="h-8 w-8 object-contain"
+                            onError={(e) => {
+                              e.currentTarget.onerror = null;
+                              e.currentTarget.style.display = "none";
+                            }}
+                          />
+                          <FileJson className="absolute h-5 w-5 text-slate-400 opacity-0 group-hover:opacity-100" />
+                        </div>
+
+                        {/* Text */}
+                        <div>
+                          <div className="text-sm font-extrabold text-slate-900 leading-snug">
+                            {p.name}
+                          </div>
+                          <div className="mt-1 text-xs text-slate-500">
+                            {p.region}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Tag */}
+                      <span className="h-fit rounded-full bg-indigo-50 px-3 py-1 text-[11px] font-medium text-indigo-600">
+                        {p.tags?.[0] || "Available"}
+                      </span>
+                    </div>
+
+                    <div className="mt-4 text-xs font-medium text-slate-500 group-hover:text-indigo-600">
+                      Tap to continue →
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         ))}
       </div>
     </div>

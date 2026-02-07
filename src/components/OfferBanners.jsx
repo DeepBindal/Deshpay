@@ -7,22 +7,27 @@ export default function OfferBanners() {
       {OFFERS.map((o) => (
         <div
           key={o.id}
-          className={`min-w-70 md:min-w-90 rounded-3xl bg-linear-to-br ${o.tone} p-4 shadow-soft`}
+          className={`min-w-70 md:min-w-100 rounded-3xl bg-linear-to-br ${o.tone} p-4 shadow-sm`}
         >
           <div className="flex items-start justify-between gap-3">
             <div>
-              <div className="text-sm font-black">{o.title}</div>
-              <div className="mt-1 text-xs text-white/85">{o.subtitle}</div>
+              <div className="text-sm font-black text-slate-900">{o.title}</div>
+              <div className="mt-1 text-xs text-slate-700">{o.subtitle}</div>
             </div>
-            <span className="rounded-2xl bg-black/20 px-2 py-1 text-xs font-semibold">Offer</span>
+
+            <span className="rounded-2xl bg-white/70 px-2 py-1 text-xs font-semibold text-slate-800">
+              Offer
+            </span>
           </div>
 
-          <div className="mt-4 flex items-center justify-between rounded-2xl bg-black/25 px-3 py-2">
-            <div className="text-xs text-white/85">Use code</div>
-            <div className="font-mono text-sm font-extrabold tracking-wider">{o.code}</div>
+          <div className="mt-4 flex items-center justify-between rounded-2xl bg-white/70 px-3 py-2">
+            <div className="text-xs text-slate-600">Use code</div>
+            <div className="font-mono text-sm font-extrabold tracking-wider text-slate-900">
+              {o.code}
+            </div>
           </div>
 
-          <div className="mt-3 text-[11px] text-white/75">
+          <div className="mt-3 text-[11px] text-slate-600">
             *Demo only. Replace with your promo engine later.
           </div>
         </div>

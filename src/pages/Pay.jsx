@@ -150,26 +150,30 @@ export default function Pay() {
 
   return (
     <div className="space-y-4">
-      <div className="rounded-[28px] border border-white/10 bg-white/5 p-5 shadow-soft">
+      {/* Header */}
+      <div className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm">
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div>
-            <div className="text-lg font-extrabold">{cat.label} payment</div>
-            <div className="text-sm text-white/60">
+            <div className="text-lg font-extrabold text-slate-900">
+              {cat.label} payment
+            </div>
+            <div className="text-sm text-slate-500">
               Provider:{" "}
-              <span className="text-white">
+              <span className="font-semibold text-slate-900">
                 {provider?.name || "Not selected"}
               </span>
             </div>
           </div>
+
           <div className="flex gap-2">
             <Link
-              className="rounded-2xl border border-white/10 bg-black/20 px-4 py-2 text-sm hover:bg-white/10"
+              className="rounded-2xl border border-slate-300 bg-slate-50 px-4 py-2 text-sm text-slate-700 hover:bg-slate-100"
               to={`/providers/${category}`}
             >
               Change provider
             </Link>
             <button
-              className="rounded-2xl border border-white/10 bg-black/20 px-4 py-2 text-sm hover:bg-white/10"
+              className="rounded-2xl border border-slate-300 bg-slate-50 px-4 py-2 text-sm text-slate-700 hover:bg-slate-100"
               onClick={() => nav("/history")}
             >
               History
@@ -178,42 +182,44 @@ export default function Pay() {
         </div>
       </div>
 
+      {/* Success */}
       {receipt ? (
-        <div className="rounded-[28px] border border-emerald-500/30 bg-emerald-500/10 p-6 shadow-soft">
+        <div className="rounded-[28px] border border-emerald-300 bg-emerald-50 p-6 shadow-sm">
           <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
             <div>
-              <div className="text-xl font-extrabold">
+              <div className="text-xl font-extrabold text-emerald-800">
                 Payment Successful ✅
               </div>
-              <div className="mt-2 text-sm text-white/70">Receipt ID</div>
-              <div className="font-mono text-sm font-black tracking-wider">
+
+              <div className="mt-2 text-sm text-slate-600">Receipt ID</div>
+              <div className="font-mono text-sm font-black tracking-wider text-slate-900">
                 {receipt.receiptId}
               </div>
 
-              <div className="mt-4 text-sm text-white/70">
+              <div className="mt-4 text-sm text-slate-600">
                 Provider:{" "}
-                <span className="text-white font-semibold">
+                <span className="font-semibold text-slate-900">
                   {receipt.providerName}
                 </span>
                 <br />
                 Ref:{" "}
-                <span className="text-white font-semibold">
+                <span className="font-semibold text-slate-900">
                   {receipt.customerRef}
                 </span>
                 <br />
                 Method:{" "}
-                <span className="text-white font-semibold">
+                <span className="font-semibold text-slate-900">
                   {String(receipt.method).toUpperCase()}
                 </span>
               </div>
             </div>
 
-            <div className="rounded-3xl bg-black/20 p-4 text-right">
-              <div className="text-xs text-white/60">Amount Paid</div>
-              <div className="text-2xl font-black">
+            <div className="rounded-3xl bg-white p-4 text-right shadow-sm">
+              <div className="text-xs text-slate-500">Amount Paid</div>
+              <div className="text-2xl font-black text-slate-900">
                 {formatINR(receipt.amount)}
               </div>
-              <div className="mt-1 text-xs text-white/60">
+              <div className="mt-1 text-xs text-slate-500">
                 {new Date(receipt.processedAt).toLocaleString("en-IN")}
               </div>
             </div>
@@ -221,13 +227,13 @@ export default function Pay() {
 
           <div className="mt-5 flex flex-wrap gap-2">
             <Link
-              className="rounded-2xl bg-white/10 px-4 py-2 text-sm hover:bg-white/15"
+              className="rounded-2xl bg-slate-100 px-4 py-2 text-sm text-slate-700 hover:bg-slate-200"
               to="/"
             >
               Back to Home
             </Link>
             <button
-              className="rounded-2xl bg-white/10 px-4 py-2 text-sm hover:bg-white/15"
+              className="rounded-2xl bg-slate-100 px-4 py-2 text-sm text-slate-700 hover:bg-slate-200"
               onClick={() => nav(`/providers/${category}`)}
             >
               Pay another
@@ -236,13 +242,17 @@ export default function Pay() {
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-          <div className="rounded-[28px] border border-white/10 bg-white/5 p-5 shadow-soft">
-            <div className="text-sm font-extrabold">Enter details</div>
+          {/* Enter details */}
+          <div className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm">
+            <div className="text-sm font-extrabold text-slate-900">
+              Enter details
+            </div>
+
             <div className="mt-4 space-y-3">
               <div>
-                <label className="text-xs text-white/60">{meta.label}</label>
+                <label className="text-xs text-slate-500">{meta.label}</label>
                 <input
-                  className="mt-1 w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm outline-none placeholder:text-white/30"
+                  className="mt-1 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none placeholder:text-slate-400"
                   placeholder={meta.placeholder}
                   value={customerRef}
                   onChange={(e) => setCustomerRef(e.target.value)}
@@ -252,21 +262,22 @@ export default function Pay() {
 
               {mode === "topup" && (
                 <div>
-                  <label className="text-xs text-white/60">Amount (₹)</label>
+                  <label className="text-xs text-slate-500">Amount (₹)</label>
                   <input
-                    className="mt-1 w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm outline-none placeholder:text-white/30"
+                    className="mt-1 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none placeholder:text-slate-400"
                     placeholder="e.g. 299"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                     inputMode="numeric"
                   />
+
                   <div className="mt-2 flex flex-wrap gap-2">
                     {QUICK_AMOUNTS.map((a) => (
                       <button
                         key={a}
-                        className="rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-xs hover:bg-white/10"
-                        onClick={() => setAmount(String(a))}
                         type="button"
+                        className="rounded-2xl border border-slate-300 bg-slate-50 px-3 py-2 text-xs text-slate-700 hover:bg-slate-100"
+                        onClick={() => setAmount(String(a))}
                       >
                         ₹{a}
                       </button>
@@ -280,52 +291,56 @@ export default function Pay() {
                   type="button"
                   onClick={handleFetch}
                   disabled={loading}
-                  className="w-full rounded-2xl bg-linear-to-r from-indigo-500 to-violet-600 px-4 py-3 text-sm font-bold shadow-soft hover:opacity-95 disabled:opacity-60"
+                  className="w-full rounded-2xl bg-linear-to-r from-indigo-500 to-violet-600 px-4 py-3 text-sm font-bold text-white shadow-sm hover:opacity-95 disabled:opacity-60"
                 >
                   {loading ? "Fetching…" : "Fetch Bill"}
                 </button>
               )}
 
               {err && (
-                <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-200">
+                <div className="rounded-2xl border border-rose-300 bg-rose-50 px-4 py-3 text-sm text-rose-700">
                   {err}
                 </div>
               )}
             </div>
           </div>
 
-          <div className="rounded-[28px] border border-white/10 bg-white/5 p-5 shadow-soft">
-            <div className="text-sm font-extrabold">Payment</div>
+          {/* Payment */}
+          <div className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm">
+            <div className="text-sm font-extrabold text-slate-900">Payment</div>
 
             <div className="mt-4 space-y-3">
               {mode === "bill" && (
-                <div className="rounded-3xl bg-black/20 p-4">
-                  <div className="text-xs text-white/60">Bill summary</div>
+                <div className="rounded-3xl bg-slate-50 p-4">
+                  <div className="text-xs text-slate-500">Bill summary</div>
+
                   {bill ? (
                     <>
                       <div className="mt-2 flex items-start justify-between gap-3">
                         <div>
-                          <div className="text-sm font-bold">
+                          <div className="text-sm font-bold text-slate-900">
                             {provider?.name}
                           </div>
-                          <div className="text-xs text-white/60">
+                          <div className="text-xs text-slate-500">
                             Ref: {bill.billerRef} • {bill.period}
                           </div>
                         </div>
+
                         <div className="text-right">
-                          <div className="text-xs text-white/60">Due</div>
-                          <div className="text-lg font-black">
+                          <div className="text-xs text-slate-500">Due</div>
+                          <div className="text-lg font-black text-slate-900">
                             {formatINR(bill.dueAmount)}
                           </div>
                         </div>
                       </div>
-                      <div className="mt-2 text-xs text-white/60">
+
+                      <div className="mt-2 text-xs text-slate-500">
                         Due date:{" "}
                         {new Date(bill.dueDate).toLocaleDateString("en-IN")}
                       </div>
                     </>
                   ) : (
-                    <div className="mt-2 text-sm text-white/60">
+                    <div className="mt-2 text-sm text-slate-500">
                       Fetch bill to continue.
                     </div>
                   )}
@@ -333,23 +348,23 @@ export default function Pay() {
               )}
 
               <div>
-                <label className="text-xs text-white/60">Amount (₹)</label>
+                <label className="text-xs text-slate-500">Amount (₹)</label>
                 <input
-                  className="mt-1 w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm outline-none placeholder:text-white/30"
+                  className="mt-1 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none placeholder:text-slate-400"
                   placeholder="Enter amount"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   inputMode="numeric"
                 />
-                <div className="mt-1 text-xs text-white/50">
+                <div className="mt-1 text-xs text-slate-500">
                   You’ll pay: {formatINR(Number(amount || 0))}
                 </div>
               </div>
 
               <div>
-                <label className="text-xs text-white/60">Method</label>
+                <label className="text-xs text-slate-500">Method</label>
                 <select
-                  className="mt-1 w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm outline-none"
+                  className="mt-1 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none"
                   value={method}
                   onChange={(e) => setMethod(e.target.value)}
                 >
@@ -365,12 +380,12 @@ export default function Pay() {
                 type="button"
                 onClick={handlePay}
                 disabled={loading || (mode === "bill" && !bill)}
-                className="w-full rounded-2xl bg-linear-to-r from-emerald-500 to-teal-600 px-4 py-3 text-sm font-bold shadow-soft hover:opacity-95 disabled:opacity-60"
+                className="w-full rounded-2xl bg-linear-to-r from-emerald-500 to-teal-600 px-4 py-3 text-sm font-bold text-white shadow-sm hover:opacity-95 disabled:opacity-60"
               >
                 {loading ? "Processing…" : "Pay now"}
               </button>
 
-              <div className="text-[11px] text-white/45">
+              <div className="text-[11px] text-slate-400">
                 Demo: payment sometimes fails randomly so it feels real.
               </div>
             </div>

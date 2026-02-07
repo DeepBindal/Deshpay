@@ -17,7 +17,13 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 export default function App() {
   return (
     <Routes>
-      {/* public */}
+      {/* public (with AppShell layout) */}
+      <Route element={<AppShell />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/explore" element={<Explore />} />
+      </Route>
+
+      {/* public (no shell) */}
       <Route path="/signin" element={<Signin />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/privacy" element={<PrivacyPolicy />} />
@@ -30,8 +36,6 @@ export default function App() {
           </ProtectedRoute>
         }
       >
-        <Route path="/" element={<Home />} />
-        <Route path="/explore" element={<Explore />} />
         <Route path="/providers/:category" element={<Providers />} />
         <Route path="/mock-paynet/pay/:pid" element={<PaynetMockCheckout />} />
         <Route path="/paynet/return" element={<PaynetReturn />} />

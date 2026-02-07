@@ -5,45 +5,37 @@ export default function PrivacyPolicy() {
 
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-10">
-      <div className="rounded-[28px] border border-white/10 bg-white/5 p-6 shadow-soft">
+      <div className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
+        <img src="./deshpays_logo.png"  alt="" />
         <div className="flex flex-col gap-2">
-          <h1 className="text-2xl font-extrabold">Privacy Policy</h1>
-          <p className="text-sm text-white/60">Last updated: {lastUpdated}</p>
+          <h1 className="text-2xl font-extrabold text-slate-900">
+            Privacy Policy
+          </h1>
+          <p className="text-sm text-slate-500">Last updated: {lastUpdated}</p>
         </div>
 
-        <div className="mt-6 space-y-6 text-sm leading-6 text-white/80">
+        <div className="mt-6 space-y-6 text-sm leading-6 text-slate-700">
           <p>
             This Privacy Policy explains how{" "}
-            <span className="font-semibold text-white">BillPay</span> (“we”,
+            <span className="font-semibold text-slate-900">BillPay</span> (“we”,
             “us”, “our”) collects, uses, shares, and protects information when
             you use our website and app (the “Service”).
           </p>
 
-          <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
-            <p className="text-white/80">
-              <span className="font-semibold text-white">
-                Demo / Mock Notice:
-              </span>{" "}
-              This is a demo application. Some flows (including payments) may be
-              simulated using placeholder or mock services. Do not use real card
-              details, bank credentials, or sensitive information.
-            </p>
-          </div>
-
           <section>
-            <h2 className="text-base font-extrabold text-white">
+            <h2 className="text-base font-extrabold text-slate-900">
               1) Information We Collect
             </h2>
-            <ul className="mt-2 list-disc space-y-2 pl-5 text-white/80">
+            <ul className="mt-2 list-disc space-y-2 pl-5">
               <li>
-                <span className="font-semibold text-white">
+                <span className="font-semibold text-slate-900">
                   Account details (demo login):
                 </span>{" "}
                 name, mobile number, and a password (stored locally for demo, if
                 enabled).
               </li>
               <li>
-                <span className="font-semibold text-white">
+                <span className="font-semibold text-slate-900">
                   Transaction context:
                 </span>{" "}
                 category selected (e.g., electricity, mobile recharge),
@@ -51,14 +43,14 @@ export default function PrivacyPolicy() {
                 number), amount, and payment method selected.
               </li>
               <li>
-                <span className="font-semibold text-white">
+                <span className="font-semibold text-slate-900">
                   Device & usage data:
                 </span>{" "}
                 basic analytics like pages visited, button clicks, and error
                 logs (only if you enable analytics/monitoring).
               </li>
               <li>
-                <span className="font-semibold text-white">
+                <span className="font-semibold text-slate-900">
                   Support communications:
                 </span>{" "}
                 if you contact support, we may collect details you share (e.g.,
@@ -68,10 +60,10 @@ export default function PrivacyPolicy() {
           </section>
 
           <section>
-            <h2 className="text-base font-extrabold text-white">
+            <h2 className="text-base font-extrabold text-slate-900">
               2) What We Don’t Intentionally Collect
             </h2>
-            <ul className="mt-2 list-disc space-y-2 pl-5 text-white/80">
+            <ul className="mt-2 list-disc space-y-2 pl-5">
               <li>
                 We do not ask for or store full card numbers, CVV, netbanking
                 passwords, or UPI PINs.
@@ -84,10 +76,10 @@ export default function PrivacyPolicy() {
           </section>
 
           <section>
-            <h2 className="text-base font-extrabold text-white">
+            <h2 className="text-base font-extrabold text-slate-900">
               3) How We Use Information
             </h2>
-            <ul className="mt-2 list-disc space-y-2 pl-5 text-white/80">
+            <ul className="mt-2 list-disc space-y-2 pl-5">
               <li>
                 To provide the Service (bill fetch, payment initiation, status
                 display).
@@ -105,26 +97,26 @@ export default function PrivacyPolicy() {
           </section>
 
           <section>
-            <h2 className="text-base font-extrabold text-white">
+            <h2 className="text-base font-extrabold text-slate-900">
               4) Payments & Third-Party Services
             </h2>
-            <p className="mt-2 text-white/80">
+            <p className="mt-2">
               When integrated with real payment providers or bill-fetch
               partners, certain information may be shared with them to complete
               transactions, such as your selected provider, customer reference,
               amount, and payment status identifiers.
             </p>
-            <p className="mt-2 text-white/80">
+            <p className="mt-2">
               Third parties have their own privacy policies, and we recommend
               reviewing them once you use a real payment provider.
             </p>
           </section>
 
           <section>
-            <h2 className="text-base font-extrabold text-white">
+            <h2 className="text-base font-extrabold text-slate-900">
               5) Cookies & Local Storage
             </h2>
-            <p className="mt-2 text-white/80">
+            <p className="mt-2">
               We may use cookies and/or local storage to keep you signed in,
               remember preferences, and store demo history (like recent
               payments). You can clear your browser storage to remove this data.
@@ -132,10 +124,10 @@ export default function PrivacyPolicy() {
           </section>
 
           <section>
-            <h2 className="text-base font-extrabold text-white">
+            <h2 className="text-base font-extrabold text-slate-900">
               6) Data Retention
             </h2>
-            <p className="mt-2 text-white/80">
+            <p className="mt-2">
               We retain information only as long as necessary for the purposes
               described above. In the demo version, transaction history may be
               stored locally in your browser until you clear it.
@@ -143,8 +135,10 @@ export default function PrivacyPolicy() {
           </section>
 
           <section>
-            <h2 className="text-base font-extrabold text-white">7) Security</h2>
-            <p className="mt-2 text-white/80">
+            <h2 className="text-base font-extrabold text-slate-900">
+              7) Security
+            </h2>
+            <p className="mt-2">
               We take reasonable measures to protect information. However, no
               method of transmission or storage is 100% secure. Please use the
               Service responsibly and avoid entering sensitive credentials in
@@ -153,10 +147,10 @@ export default function PrivacyPolicy() {
           </section>
 
           <section>
-            <h2 className="text-base font-extrabold text-white">
+            <h2 className="text-base font-extrabold text-slate-900">
               8) Your Choices
             </h2>
-            <ul className="mt-2 list-disc space-y-2 pl-5 text-white/80">
+            <ul className="mt-2 list-disc space-y-2 pl-5">
               <li>
                 You can sign out and clear app data by clearing browser storage.
               </li>
@@ -169,20 +163,20 @@ export default function PrivacyPolicy() {
           </section>
 
           <section>
-            <h2 className="text-base font-extrabold text-white">
+            <h2 className="text-base font-extrabold text-slate-900">
               9) Children’s Privacy
             </h2>
-            <p className="mt-2 text-white/80">
+            <p className="mt-2">
               The Service is not intended for children under the age of 13. We
               do not knowingly collect personal information from children.
             </p>
           </section>
 
           <section>
-            <h2 className="text-base font-extrabold text-white">
+            <h2 className="text-base font-extrabold text-slate-900">
               10) Changes to This Policy
             </h2>
-            <p className="mt-2 text-white/80">
+            <p className="mt-2">
               We may update this Privacy Policy from time to time. We will
               update the “Last updated” date at the top. Continued use of the
               Service after changes means you accept the updated policy.
@@ -190,12 +184,12 @@ export default function PrivacyPolicy() {
           </section>
 
           <section>
-            <h2 className="text-base font-extrabold text-white">
+            <h2 className="text-base font-extrabold text-slate-900">
               11) Contact Us
             </h2>
-            <p className="mt-2 text-white/80">
+            <p className="mt-2">
               If you have questions about this Privacy Policy, contact us at{" "}
-              <span className="font-semibold text-white">
+              <span className="font-semibold text-slate-900">
                 support@yourdomain.com
               </span>
               .
