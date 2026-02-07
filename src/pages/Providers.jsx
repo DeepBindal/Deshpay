@@ -7,7 +7,9 @@ import { logoUrlByDomain, logoUrlByName } from "../utils/logos";
 export default function Providers() {
   const { category } = useParams();
   const nav = useNavigate();
+
   const [q, setQ] = useState("");
+  const [stateFilter, setStateFilter] = useState("ALL");
 
   const cat = useMemo(
     () => CATEGORIES.find((c) => c.id === category),
@@ -15,16 +17,36 @@ export default function Providers() {
   );
 
   const list = PROVIDERS[category] || [];
+  console.log(list)
 
+  // Build state options from the current category's providers
+  const states = useMemo(() => {
+    const s = new Set(list.map((p) => p.region).filter(Boolean));
+    return [
+      "ALL",
+      ...Array.from(s).sort((a, b) => String(a).localeCompare(String(b))),
+    ];
+  }, [list]);
+
+  // Filter by search + selected state
   const filtered = useMemo(() => {
     const s = q.trim().toLowerCase();
-    if (!s) return list;
-    return list.filter((p) =>
-      `${p.name} ${p.region} ${(p.tags || []).join(" ")}`
-        .toLowerCase()
-        .includes(s),
-    );
-  }, [q, list]);
+
+    return list.filter((p) => {
+      const matchesSearch = !s
+        ? true
+        : `${p.name} ${p.region} ${p.state || ""} ${(p.tags || []).join(" ")}`
+            .toLowerCase()
+            .includes(s);
+
+      const matchesState =
+        stateFilter === "ALL"
+          ? true
+          : String(p.region || "") === String(stateFilter);
+
+      return matchesSearch && matchesState;
+    });
+  }, [q, list, stateFilter]);
 
   if (!cat) {
     return (
@@ -62,12 +84,27 @@ export default function Providers() {
             </div>
           </div>
 
-          <input
-            className="w-full md:w-96 rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
-            placeholder="Search provider…"
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-          />
+          {/* Filters */}
+          <div className="flex w-full flex-col gap-3 md:w-auto md:flex-row">
+            <select
+              className="w-full md:w-56 rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
+              value={stateFilter}
+              onChange={(e) => setStateFilter(e.target.value)}
+            >
+              {states.map((st) => (
+                <option key={st} value={st}>
+                  {st === "ALL" ? "All states" : st}
+                </option>
+              ))}
+            </select>
+
+            <input
+              className="w-full md:w-96 rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
+              placeholder="Search provider…"
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+            />
+          </div>
         </div>
       </div>
 
@@ -100,18 +137,18 @@ export default function Providers() {
                       )
                     }
                     className="
-                group relative text-left rounded-3xl border border-slate-200
-                bg-white p-5 shadow-sm transition
-                hover:-translate-y-0.5 hover:shadow-md
-                hover:border-indigo-300 focus:outline-none
-                focus:ring-2 focus:ring-indigo-200
-              "
+                      group relative text-left rounded-3xl border border-slate-200
+                      bg-white p-5 shadow-sm transition
+                      hover:-translate-y-0.5 hover:shadow-md
+                      hover:border-indigo-300 focus:outline-none
+                      focus:ring-2 focus:ring-indigo-200
+                    "
                   >
                     <div className="flex items-start justify-between gap-4">
                       {/* Left */}
                       <div className="flex gap-4">
                         {/* Logo */}
-                        <div className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-slate-100">
+                        <div className="relative grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-slate-100">
                           <img
                             src={logo}
                             alt={p.name}
@@ -132,6 +169,12 @@ export default function Providers() {
                           </div>
                           <div className="mt-1 text-xs text-slate-500">
                             {p.region}
+                            {p.state ? (
+                              <span className="text-slate-400">
+                                {" "}
+                                • {p.state}
+                              </span>
+                            ) : null}
                           </div>
                         </div>
                       </div>
