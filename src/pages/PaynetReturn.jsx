@@ -23,7 +23,6 @@ export default function PaynetReturn() {
       });
       setData(r);
 
-      // Add to history once when completed
       if (r?.response_code === "100") {
         const existing = readTxns().some((t) => t.id === r.transaction_id);
         if (!existing) {
@@ -57,51 +56,56 @@ export default function PaynetReturn() {
   }, [data, isSuccess, isPending, isFailed]);
 
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-6">
-      <div className="w-full max-w-lg rounded-[28px] border border-white/10 bg-white/5 p-6 shadow-soft">
-        <div className="text-xl font-extrabold">{title}</div>
+    <div className="bg-gray-50 flex items-center justify-center p-6">
+      <div className="w-full max-w-lg rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="text-xl font-extrabold text-slate-900">{title}</div>
 
-        <div className="mt-4 rounded-3xl bg-black/20 p-4 text-sm">
+        <div className="mt-4 rounded-3xl bg-slate-50 p-4 text-sm">
           <div className="flex justify-between gap-3">
-            <span className="text-white/60">PayPage ID</span>
-            <span className="font-mono font-bold">
+            <span className="text-slate-500">PayPage ID</span>
+            <span className="font-mono font-bold text-slate-900">
               {data?.pt_invoice_id || payment_reference}
             </span>
           </div>
+
           <div className="mt-2 flex justify-between gap-3">
-            <span className="text-white/60">Txn ID</span>
-            <span className="font-mono font-bold">
+            <span className="text-slate-500">Txn ID</span>
+            <span className="font-mono font-bold text-slate-900">
               {data?.transaction_id || "—"}
             </span>
           </div>
+
           <div className="mt-2 flex justify-between gap-3">
-            <span className="text-white/60">Amount</span>
-            <span className="font-extrabold">
+            <span className="text-slate-500">Amount</span>
+            <span className="font-extrabold text-slate-900">
               {data ? formatINR(data.amount) : "—"}
             </span>
           </div>
+
           <div className="mt-2 flex justify-between gap-3">
-            <span className="text-white/60">Message</span>
-            <span className="text-white/80">{data?.result || "—"}</span>
+            <span className="text-slate-500">Message</span>
+            <span className="text-slate-700">{data?.result || "—"}</span>
           </div>
         </div>
 
         <div className="mt-5 flex flex-wrap gap-2">
           <Link
             to="/"
-            className="rounded-2xl bg-white/10 px-4 py-2 text-sm hover:bg-white/15"
+            className="rounded-2xl bg-slate-100 px-4 py-2 text-sm text-slate-700 hover:bg-slate-200"
           >
             Back to Home
           </Link>
+
           <Link
             to="/history"
-            className="rounded-2xl bg-white/10 px-4 py-2 text-sm hover:bg-white/15"
+            className="rounded-2xl bg-slate-100 px-4 py-2 text-sm text-slate-700 hover:bg-slate-200"
           >
             History
           </Link>
+
           <button
             onClick={() => window.location.reload()}
-            className="rounded-2xl bg-white/10 px-4 py-2 text-sm hover:bg-white/15"
+            className="rounded-2xl bg-slate-100 px-4 py-2 text-sm text-slate-700 hover:bg-slate-200"
           >
             Re-check
           </button>

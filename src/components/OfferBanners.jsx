@@ -3,32 +3,36 @@ import { OFFERS } from "../data/mock";
 
 export default function OfferBanners() {
   return (
-    <div className="flex gap-3 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <div className="flex gap-4 overflow-x-auto pb-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       {OFFERS.map((o) => (
         <div
           key={o.id}
-          className={`min-w-70 md:min-w-100 rounded-3xl bg-linear-to-br ${o.tone} p-4 shadow-sm`}
+          className={`
+            min-w-[85%] sm:min-w-95 md:min-w-110 lg:min-w-130
+            rounded-3xl bg-linear-to-br ${o.tone}
+            p-6 shadow-md
+          `}
         >
-          <div className="flex items-start justify-between gap-3">
+          {/* Top */}
+          <div className="flex items-start justify-between gap-4">
             <div>
-              <div className="text-sm font-black text-slate-900">{o.title}</div>
-              <div className="mt-1 text-xs text-slate-700">{o.subtitle}</div>
+              <div className="text-base font-extrabold text-slate-900">
+                {o.title}
+              </div>
+              <div className="mt-1 text-sm text-slate-700">{o.subtitle}</div>
             </div>
 
-            <span className="rounded-2xl bg-white/70 px-2 py-1 text-xs font-semibold text-slate-800">
-              Offer
+            <span className="shrink-0 rounded-full bg-white/80 px-3 py-1 text-xs font-semibold text-slate-800">
+              OFFER
             </span>
           </div>
 
-          <div className="mt-4 flex items-center justify-between rounded-2xl bg-white/70 px-3 py-2">
-            <div className="text-xs text-slate-600">Use code</div>
-            <div className="font-mono text-sm font-extrabold tracking-wider text-slate-900">
+          {/* Code */}
+          <div className="mt-6 flex items-center justify-between rounded-2xl bg-white/80 px-4 py-3">
+            <div className="text-xs font-medium text-slate-600">Use code</div>
+            <div className="font-mono text-base font-extrabold tracking-widest text-slate-900">
               {o.code}
             </div>
-          </div>
-
-          <div className="mt-3 text-[11px] text-slate-600">
-            *Demo only. Replace with your promo engine later.
           </div>
         </div>
       ))}
