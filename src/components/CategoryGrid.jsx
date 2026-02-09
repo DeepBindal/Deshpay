@@ -1,14 +1,20 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { CATEGORIES } from "../data/mock";
+import { useCategoriesStore } from "../store/categories.store";
+import { useEffect } from "react";
 
 export default function CategoryGrid() {
+  const { categories, fetchCategories, loading } = useCategoriesStore();
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-      {CATEGORIES.map((c) => (
+      {categories.map((c) => (
         <Link
-          key={c.id}
-          to={`/providers/${c.id}`}
+          key={c._id}
+          to={`/providers/${c.key}`}
           className="group rounded-3xl border border-slate-200 bg-white p-4 shadow-sm transition hover:bg-slate-50"
         >
           <div className="flex items-start justify-between">

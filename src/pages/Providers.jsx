@@ -1,12 +1,12 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FileJson } from "lucide-react";
-
-import { CATEGORIES } from "../data/mock"; // keep categories for now
 import { useProvidersStore } from "../store/providers.store";
 import { groupProvidersByRegion } from "../store/providers.selectors";
+import { useCategoriesStore } from "../store/categories.store";
 
 export default function Providers() {
+  const { categories,fetchCategories } = useCategoriesStore();
   const { category } = useParams();
   const nav = useNavigate();
   const [q, setQ] = useState("");
@@ -15,13 +15,14 @@ export default function Providers() {
     useProvidersStore();
 
   const cat = useMemo(
-    () => CATEGORIES.find((c) => c.id === category),
+    () => categories?.find((c) => c.key === category),
     [category],
   );
 
   const providers = providersByCategory[category] || [];
 
   useEffect(() => {
+    fetchCategories();
     if (category) fetchProviders(category);
   }, [category]);
 
