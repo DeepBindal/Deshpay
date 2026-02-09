@@ -1,11 +1,53 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuthStore } from "../store/auth.store";
 
 export default function Signin() {
+  const login = useAuthStore((s) => s.login);
   const nav = useNavigate();
+
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+
   const [err, setErr] = useState("");
+  const [fieldErr, setFieldErr] = useState({ phone: "", password: "" });
+  const [loading, setLoading] = useState(false);
+
+  // keep only digits
+  const phoneDigits = useMemo(() => phone.replace(/\D/g, ""), [phone]);
+
+  const validate = () => {
+    const next = { phone: "", password: "" };
+
+    const p = phoneDigits.trim();
+    if (!p) next.phone = "Mobile number is required";
+    else if (p.length !== 10)
+      next.phone = "Enter a valid 10-digit mobile number";
+    else if (/^0+$/.test(p)) next.phone = "Enter a valid mobile number";
+
+    const pw = password;
+    if (!pw) next.password = "Password is required";
+    else if (pw.length < 4)
+      next.password = "Password must be at least 4 characters";
+
+    setFieldErr(next);
+    return !next.phone && !next.password;
+  };
+
+  const onSubmit = async () => {
+    setErr("");
+    if (!validate()) return;
+
+    try {
+      setLoading(true);
+      await login({ phone: phoneDigits, password });
+      nav("/");
+    } catch (e) {
+      setErr(e?.message || "Signin failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -29,23 +71,58 @@ export default function Signin() {
             <div>
               <label className="text-xs text-slate-500">Mobile number</label>
               <input
-                className="mt-1 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
+                className={`mt-1 w-full rounded-2xl border bg-white px-4 py-3 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:ring-2 ${
+                  fieldErr.phone
+                    ? "border-rose-300 focus:border-rose-400 focus:ring-rose-100"
+                    : "border-slate-300 focus:border-indigo-400 focus:ring-indigo-100"
+                }`}
                 placeholder="10-digit number"
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                onChange={(e) => {
+                  setErr("");
+                  setFieldErr((s) => ({ ...s, phone: "" }));
+                  // allow typing with spaces/dashes but keep it sane
+                  const next = e.target.value;
+                  if (next.length <= 14) setPhone(next);
+                }}
+                onBlur={validate}
                 inputMode="numeric"
+                autoComplete="tel"
               />
+              {fieldErr.phone && (
+                <div className="mt-1 text-xs text-rose-600">
+                  {fieldErr.phone}
+                </div>
+              )}
             </div>
 
             <div>
               <label className="text-xs text-slate-500">Password</label>
               <input
-                className="mt-1 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
+                className={`mt-1 w-full rounded-2xl border bg-white px-4 py-3 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:ring-2 ${
+                  fieldErr.password
+                    ? "border-rose-300 focus:border-rose-400 focus:ring-rose-100"
+                    : "border-slate-300 focus:border-indigo-400 focus:ring-indigo-100"
+                }`}
                 placeholder="Min 4 chars"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setErr("");
+                  setFieldErr((s) => ({ ...s, password: "" }));
+                  setPassword(e.target.value);
+                }}
+                onBlur={validate}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") onSubmit();
+                }}
                 type="password"
+                autoComplete="current-password"
               />
+              {fieldErr.password && (
+                <div className="mt-1 text-xs text-rose-600">
+                  {fieldErr.password}
+                </div>
+              )}
             </div>
 
             {err && (
@@ -55,18 +132,12 @@ export default function Signin() {
             )}
 
             <button
-              onClick={async () => {
-                setErr("");
-                try {
-                  await signin({ phone: phone.trim(), password });
-                  nav("/");
-                } catch (e) {
-                  setErr(e.message || "Signin failed");
-                }
-              }}
-              className="w-full rounded-2xl bg-linear-to-r from-indigo-500 to-violet-600 px-4 py-3 text-sm font-bold text-white shadow-sm hover:opacity-95"
+              type="button"
+              disabled={loading}
+              onClick={onSubmit}
+              className={`w-full rounded-2xl bg-linear-to-r from-indigo-500 to-violet-600 px-4 py-3 text-sm font-bold text-white shadow-sm hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-60`}
             >
-              Sign in
+              {loading ? "Signing in..." : "Sign in"}
             </button>
 
             <div className="text-center text-sm text-slate-500">
