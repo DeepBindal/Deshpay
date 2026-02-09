@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { loginApi, signupApi, meApi } from "../api/auth.api";
+import { useTransactionsStore } from "./transactions.store";
 
 export const useAuthStore = create((set) => ({
   user: null,
@@ -35,6 +36,11 @@ export const useAuthStore = create((set) => ({
 
   logout: () => {
     localStorage.removeItem("token");
-    set({ user: null });
+    useTransactionsStore.getState().clearTransactions();
+
+    set({
+      user: null,
+      isAuthenticated: false,
+    });
   },
 }));
