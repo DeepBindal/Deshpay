@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { useAuth } from "../state/AuthContext";
+import { useAuthStore } from "../store/auth.store";
 
 const NavItem = ({ to, label, icon }) => (
   <NavLink
@@ -19,8 +19,9 @@ const NavItem = ({ to, label, icon }) => (
 );
 
 export default function AppShell() {
-  const { user, signout } = useAuth();
   const nav = useNavigate();
+  const user = useAuthStore((state) => state.user);
+  const logout = useAuthStore((state) => state.logout);
 
   return (
     <div className="min-h-screen bg-gray-50 text-slate-900">
@@ -48,7 +49,7 @@ export default function AppShell() {
 
             <button
               onClick={() => {
-                signout();
+                logout();
                 nav("/signin");
               }}
               className="rounded-2xl border border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-700 hover:bg-slate-100"

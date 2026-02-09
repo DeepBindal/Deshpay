@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AppShell from "./components/AppShell";
@@ -13,8 +13,14 @@ import History from "./pages/History";
 import PaynetReturn from "./pages/PaynetReturn";
 import PaynetMockCheckout from "./pages/PaynetMockCheckout";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import { useAuthStore } from "./store/auth.store";
 
 export default function App() {
+  const initAuth = useAuthStore((s) => s.init);
+
+  useEffect(() => {
+    initAuth();
+  }, []);
   return (
     <Routes>
       {/* public (with AppShell layout) */}
