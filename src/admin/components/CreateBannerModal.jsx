@@ -11,6 +11,7 @@ export default function CreateBannerModal() {
   const [form, setForm] = useState({
     title: "",
     subtitle: "",
+    code: "",
     image: null,
   });
 
@@ -51,10 +52,12 @@ export default function CreateBannerModal() {
 
     if (!form.title.trim()) return setErr("Title is required.");
     if (!form.image) return setErr("Please select an image.");
+    if (!form.code) return setErr("Please select code.");
 
     const fd = new FormData();
     fd.append("title", form.title.trim());
     fd.append("subtitle", form.subtitle.trim());
+    fd.append("code", form.code.trim());
     fd.append("image", form.image);
 
     try {
@@ -86,7 +89,7 @@ export default function CreateBannerModal() {
           />
 
           {/* Modal */}
-          <div className="relative w-full max-w-lg overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl">
+          <div className="relative w-full max-w-lg max-h-[95vh] overflow-y-auto overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl">
             {/* Header */}
             <div className="flex items-start justify-between gap-4 border-b border-slate-100 p-6">
               <div>
@@ -147,6 +150,12 @@ export default function CreateBannerModal() {
                 placeholder="e.g. Pay bills & get rewards"
                 value={form.subtitle}
                 onChange={(e) => setForm({ ...form, subtitle: e.target.value })}
+              />
+              <Field
+                label="Code"
+                placeholder="PAY9492"
+                value={form.code}
+                onChange={(e) => setForm({ ...form, code: e.target.value })}
               />
 
               {/* File */}

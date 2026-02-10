@@ -67,7 +67,7 @@ export default function AdminBanners() {
             >
               <div className="relative">
                 <img
-                  src={b.imageUrl}
+                  src={`${import.meta.env.VITE_API_URL}${b.imageUrl}`}
                   alt={b.title}
                   className="h-44 w-full object-cover"
                 />
