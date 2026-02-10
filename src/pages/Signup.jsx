@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/auth.store";
+import { toast } from "react-toastify";
 
 export default function Signup() {
   const signup = useAuthStore((s) => s.signup);
@@ -54,7 +55,10 @@ export default function Signup() {
     try {
       setLoading(true);
       await signup({ name: name.trim(), phone: phoneDigits, password });
-      nav("/");
+      toast.success("Signup successful");
+      setTimeout(() => {
+        nav("/");
+      }, 1000);
     } catch (e) {
       setErr(e?.message || "Signup failed");
     } finally {
@@ -67,8 +71,15 @@ export default function Signup() {
       <div className="mx-auto flex min-h-screen max-w-6xl items-center justify-center px-4 py-10">
         <div className="w-full max-w-md rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
           {/* Header */}
-          <div className="text-lg font-extrabold text-slate-900">
-            Create your account
+          <div className="flex flex-col items-center gap-3">
+            <img
+              src="/deshpays_logo.png"
+              alt="DeshPays"
+              className="h-14 w-auto"
+            />
+            <div className="text-lg font-extrabold text-slate-900">
+              Create an account
+            </div>
           </div>
 
           {/* Form */}

@@ -2,6 +2,7 @@ import React, { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/auth.store";
 import { meApi } from "../api/auth.api";
+import { toast } from "react-toastify";
 
 export default function Signin() {
   const login = useAuthStore((s) => s.login);
@@ -46,7 +47,10 @@ export default function Signin() {
       if (res.role === "ADMIN") {
         nav("/admin/users");
       } else {
-        nav("/");
+        toast.success("Welcome back");
+        setTimeout(() => {
+          nav("/");
+        }, 1000);
       }
     } catch (e) {
       setErr(e?.message || "Signin failed");

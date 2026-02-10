@@ -6,6 +6,7 @@ import { useAuthStore } from "./store/auth.store";
 import Signup from "./pages/Signup";
 import Signin from "./pages/Signin";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import { toast, ToastContainer } from "react-toastify";
 
 const App = () => {
   const initAuth = useAuthStore((s) => s.init);
@@ -13,17 +14,19 @@ const App = () => {
   useEffect(() => {
     initAuth();
   }, []);
-
   return (
-    <Routes>
-      <Route path="/signin" element={<Signin />} />
-      <Route path="/signup" element={<Signup />} />
-      <Route path="/privacy" element={<PrivacyPolicy />} />
+    <>
+      <Routes>
+        <Route path="/signin" element={<Signin />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
 
-      <Route path="/*" element={<UserRoutes />} />
-      <Route path="/admin/*" element={<AdminRoutes />} />
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+        <Route path="/*" element={<UserRoutes />} />
+        <Route path="/admin/*" element={<AdminRoutes />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+      <ToastContainer />
+    </>
   );
 };
 
