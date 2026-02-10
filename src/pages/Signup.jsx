@@ -70,12 +70,9 @@ export default function Signup() {
           <div className="text-lg font-extrabold text-slate-900">
             Create your account
           </div>
-          <div className="mt-1 text-sm text-slate-500">
-            Mock signup (localStorage)
-          </div>
 
           {/* Form */}
-          <div className="mt-6 space-y-3">
+          <div className="space-y-3">
             <div>
               <label className="text-xs text-slate-500">Name</label>
               <input

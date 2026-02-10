@@ -8,8 +8,8 @@ import {
 import { PAYMENT_METHODS, QUICK_AMOUNTS } from "../data/mock";
 import { fetchBill } from "../api/bills";
 import { formatINR } from "../utils/money";
-import { paynet_generate_payment_page } from "../lib/paynetMockClient";
 import { useCategoriesStore } from "../store/categories.store";
+import { useProvidersStore } from "../store/providers.store";
 
 function refMeta(category) {
   if (category === "electricity")
@@ -39,28 +39,40 @@ function validRef(category, v) {
 }
 
 export default function Pay() {
-  const { category } = useParams();
-  const { categories } = useCategoriesStore((s) => s.categories);
-  const [sp] = useSearchParams();
-  const providerId = sp.get("providerId") || "";
-  const nav = useNavigate();
-
-  const cat = useMemo(
-    () => categories.find((c) => c.id === category),
-    [category],
-  );
-  const provider = useMemo(
-    () => (PROVIDERS[category] || []).find((p) => p.id === providerId),
-    [category, providerId],
-  );
-
   const [customerRef, setCustomerRef] = useState("");
   const [method, setMethod] = useState("upi");
   const [amount, setAmount] = useState("");
+  const [payErr, setPayErr] = useState("");
   const [bill, setBill] = useState(null);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
   const [receipt, setReceipt] = useState(null);
+  const { category } = useParams();
+  const { categories, fetchCategories } = useCategoriesStore();
+  const { providersByCategory, fetchProviders, getProviderById } =
+    useProvidersStore();
+
+  const [sp] = useSearchParams();
+  const providerId = sp.get("providerId") || "";
+  const nav = useNavigate();
+
+  useEffect(() => {
+    if (category) fetchProviders(category);
+  }, [category, fetchProviders]);
+
+  useEffect(() => {
+    if (!categories?.length) fetchCategories?.();
+  }, [categories?.length, fetchCategories]);
+
+  const cat = useMemo(
+    () => categories?.find((c) => c.key === category),
+    [categories, category],
+  );
+  const provider = useMemo(() => {
+    if (!category || !providerId) return null;
+    return getProviderById(category, providerId);
+  }, [category, providerId, getProviderById, categories]);
+  console.log(provider)
 
   const meta = refMeta(category);
   const mode = cat?.mode || "bill";
@@ -100,47 +112,59 @@ export default function Pay() {
     setAmount(String(res.bill.dueAmount));
   }
 
-  async function handlePay() {
-    setErr("");
-    const amt = Number(amount || 0);
+  const validatePay = () => {
+    const e = [];
 
-    if (!providerId) return setErr("Select a provider");
-    if (!validRef(category, customerRef))
-      return setErr("Enter a valid reference");
-    if (!amt || amt < 10) return setErr("Enter a valid amount");
+    if (!providerId) e.push("Select a provider first.");
 
-    setLoading(true);
-
-    try {
-      const resp = await paynet_generate_payment_page({
-        merchant_email:
-          import.meta.env.VITE_PAYNET_MERCHANT_EMAIL || "demo@merchant.com",
-        secret_key:
-          import.meta.env.VITE_PAYNET_SECRET_KEY || "demo_secret_key_123",
-        return_url: `${window.location.origin}/paynet/return`,
-        title: `${cat.label} • ${provider?.name || "Provider"}`,
-        amount: String(amt),
-        currency: "INR",
-        reference_no: `REF_${Date.now()}`,
-        meta: {
-          category,
-          categoryLabel: cat.label,
-          providerName: provider?.name || "Provider",
-          customerRef: customerRef.trim(),
-          preferredMethod: method,
-        },
-      });
-
-      if (resp?.response_code !== "4012") {
-        setErr(resp?.result || "Failed to create PayPage");
-        return;
-      }
-
-      // redirect to mock gateway checkout
-      window.location.href = resp.payment_url;
-    } finally {
-      setLoading(false);
+    if (!validRef(category, customerRef)) {
+      e.push(`Enter a valid ${meta.label}.`);
     }
+
+    const amt = Number(amount);
+    if (!amount || Number.isNaN(amt)) e.push("Enter a valid amount.");
+    else if (amt < 10) e.push("Minimum amount is ₹10.");
+
+    if ((cat?.mode || "bill") === "bill") {
+      if (!bill) e.push("Fetch bill first before paying.");
+    }
+
+    return e;
+  };
+
+  // const canPay = useMemo(
+  //   () => validatePay().length === 0,
+  //   [providerId, customerRef, amount, bill, category, cat?.mode],
+  // );
+
+  function handlePay() {
+    setErr("");
+    setPayErr("");
+
+    const errors = validatePay();
+    if (errors.length) {
+      setPayErr(errors[0]); // show first error (simple)
+      return;
+    }
+
+    const payload = {
+      category,
+      categoryLabel: cat?.label,
+      mode: cat?.mode,
+      providerId,
+      providerName: provider?.name,
+      customerRef: customerRef.trim(),
+      method,
+      amount: Number(amount),
+      bill, // include bill object if bill-mode
+      meta: {
+        uiMetaLabel: meta.label,
+        uiMetaPlaceholder: meta.placeholder,
+        ts: new Date().toISOString(),
+      },
+    };
+
+    console.log("✅ PAY CLICKED - payload:", payload);
   }
 
   return (
@@ -380,9 +404,11 @@ export default function Pay() {
                 {loading ? "Processing…" : "Pay now"}
               </button>
 
-              <div className="text-[11px] text-slate-400">
-                Demo: payment sometimes fails randomly so it feels real.
-              </div>
+              {payErr && (
+                <div className="rounded-2xl border border-rose-300 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+                  {payErr}
+                </div>
+              )}
             </div>
           </div>
         </div>

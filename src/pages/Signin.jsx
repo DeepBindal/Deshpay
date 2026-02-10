@@ -60,10 +60,12 @@ export default function Signin() {
       <div className="mx-auto flex min-h-screen max-w-6xl items-center justify-center px-4 py-10">
         <div className="w-full max-w-md rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
           {/* Header */}
-          <div className="flex items-center gap-3">
-            <div className="grid h-11 w-11 place-items-center rounded-2xl bg-linear-to-br from-indigo-500 to-emerald-400 text-white">
-              <span className="text-xl font-black">₹</span>
-            </div>
+          <div className="flex flex-col items-center gap-3">
+            <img
+              src="/deshpays_logo.png"
+              alt="DeshPays"
+              className="h-14 w-auto"
+            />
             <div>
               <div className="text-lg font-extrabold text-slate-900">
                 Welcome back
