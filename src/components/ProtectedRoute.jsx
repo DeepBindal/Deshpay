@@ -1,15 +1,24 @@
-import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuthStore } from "../store/auth.store";
 
-export default function ProtectedRoute({ children }) {
+export default function ProtectedRoute({
+  children,
+  allowedRoles,
+  redirectTo = "/signin",
+}) {
   const { user, loading } = useAuthStore();
   const loc = useLocation();
 
   if (loading) return null;
-  if (!user) return <Navigate to="/signin" />;
 
-  if (!user)
-    return <Navigate to="/signin" replace state={{ from: loc.pathname }} />;
+  if (!user) {
+    return <Navigate to={redirectTo} replace state={{ from: loc.pathname }} />;
+  }
+
+  if (allowedRoles?.length && !allowedRoles.includes(user.role)) {
+    const fallback = user.role === "ADMIN" ? "/admin/users" : "/";
+    return <Navigate to={fallback} replace />;
+  }
+
   return children;
 }

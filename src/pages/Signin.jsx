@@ -45,7 +45,7 @@ export default function Signin() {
       await login({ phone: phoneDigits, password });
       const res = await meApi();
       if (res.role === "ADMIN") {
-        nav("/admin/users");
+        nav("/admin");
       } else {
         toast.success("Welcome back");
         setTimeout(() => {

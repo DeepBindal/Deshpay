@@ -7,6 +7,7 @@ import Signup from "./pages/Signup";
 import Signin from "./pages/Signin";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import { toast, ToastContainer } from "react-toastify";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const App = () => {
   const initAuth = useAuthStore((s) => s.init);
@@ -22,7 +23,14 @@ const App = () => {
         <Route path="/privacy" element={<PrivacyPolicy />} />
 
         <Route path="/*" element={<UserRoutes />} />
-        <Route path="/admin/*" element={<AdminRoutes />} />
+        <Route
+          path="/admin/*"
+          element={
+            <ProtectedRoute allowedRoles={["ADMIN"]}>
+              <AdminRoutes />
+            </ProtectedRoute>
+          }
+        />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <ToastContainer />
