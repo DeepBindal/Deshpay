@@ -5,17 +5,11 @@ import {
   useParams,
   useSearchParams,
 } from "react-router-dom";
-import {
-  CATEGORIES,
-  PROVIDERS,
-  PAYMENT_METHODS,
-  QUICK_AMOUNTS,
-} from "../data/mock";
+import { PAYMENT_METHODS, QUICK_AMOUNTS } from "../data/mock";
 import { fetchBill } from "../api/bills";
-import { createPayment } from "../api/payments";
 import { formatINR } from "../utils/money";
-import { addTxn } from "../utils/storage";
 import { paynet_generate_payment_page } from "../lib/paynetMockClient";
+import { useCategoriesStore } from "../store/categories.store";
 
 function refMeta(category) {
   if (category === "electricity")
@@ -46,12 +40,13 @@ function validRef(category, v) {
 
 export default function Pay() {
   const { category } = useParams();
+  const { categories } = useCategoriesStore((s) => s.categories);
   const [sp] = useSearchParams();
   const providerId = sp.get("providerId") || "";
   const nav = useNavigate();
 
   const cat = useMemo(
-    () => CATEGORIES.find((c) => c.id === category),
+    () => categories.find((c) => c.id === category),
     [category],
   );
   const provider = useMemo(

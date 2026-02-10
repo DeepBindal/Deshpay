@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/auth.store";
+import { meApi } from "../api/auth.api";
 
 export default function Signin() {
   const login = useAuthStore((s) => s.login);
@@ -41,7 +42,12 @@ export default function Signin() {
     try {
       setLoading(true);
       await login({ phone: phoneDigits, password });
-      nav("/");
+      const res = await meApi();
+      if (res.role === "ADMIN") {
+        nav("/admin/users");
+      } else {
+        nav("/");
+      }
     } catch (e) {
       setErr(e?.message || "Signin failed");
     } finally {
