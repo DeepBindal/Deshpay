@@ -1,45 +1,76 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { Home, CreditCard, History, Shield, LogOut } from "lucide-react";
 import { useAuthStore } from "../store/auth.store";
 
-const NavItem = ({ to, label, icon }) => (
-  <NavLink
-    to={to}
-    className={({ isActive }) =>
-      `flex flex-col items-center gap-1 rounded-2xl px-4 py-2 text-xs transition ${
-        isActive
-          ? "bg-slate-100 text-slate-900"
-          : "text-slate-600 hover:text-slate-900"
-      }`
-    }
-  >
-    <span className="text-lg">{icon}</span>
-    <span>{label}</span>
-  </NavLink>
-);
+/* ============================
+   Bottom Nav Item Component
+============================ */
+const NavItem = ({ to, label, Icon, end, badge }) => {
+  return (
+    <NavLink to={to} end={end}>
+      {({ isActive }) => (
+        <motion.div
+          whileTap={{ scale: 0.9 }}
+          className={`relative flex flex-col items-center justify-center gap-1 rounded-2xl px-5 py-2 text-xs transition-all duration-300 ${
+            isActive ? "text-white" : "text-slate-500 hover:text-slate-900"
+          }`}
+        >
+          {/* Active Background */}
+          {isActive && (
+            <motion.div
+              layoutId="active-pill"
+              className="absolute inset-0 rounded-2xl bg-slate-900 shadow-md"
+              transition={{ type: "spring", stiffness: 400, damping: 30 }}
+            />
+          )}
 
+          <div className="relative flex items-center justify-center">
+            <Icon size={20} />
+            {badge && (
+              <span className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
+                {badge}
+              </span>
+            )}
+          </div>
+
+          <span className="relative font-medium">{label}</span>
+        </motion.div>
+      )}
+    </NavLink>
+  );
+};
+
+/* ============================
+   Main App Shell
+============================ */
 export default function AppShell() {
   const nav = useNavigate();
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
 
   return (
-    <div className="min-h-screen bg-gray-50 text-slate-900">
-      {/* top bar */}
-      <div className="sticky top-0 z-30 border-b bg-white/90 backdrop-blur">
-        <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-4 py-4">
+    <div className="min-h-screen bg-linear-to-b from-gray-50 to-gray-100 text-slate-900">
+      {/* ============================
+          Top Bar
+      ============================ */}
+      <div className="sticky top-0 z-40 bg-white/80 backdrop-blur-md">
+        <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4">
+          {/* Logo */}
           <button
             onClick={() => nav("/")}
-            className="flex items-center gap-2 rounded-2xl px-3 py-2 hover:bg-slate-100"
+            className="flex items-center gap-2 rounded-xl transition hover:scale-105"
           >
             <img
               src="/deshpays_logo.png"
               alt="DeshPays"
-              className="h-14 w-auto"
+              className="h-12 w-auto"
             />
           </button>
 
-          <div className="flex items-center gap-3">
+          {/* User Info */}
+          <div className="flex items-center gap-4">
             <div className="hidden sm:block text-right">
               <div className="text-sm font-semibold text-slate-900">
                 {user?.name}
@@ -47,31 +78,37 @@ export default function AppShell() {
               <div className="text-xs text-slate-500">{user?.phone}</div>
             </div>
 
-            <button
-              onClick={() => {
-                logout();
-                nav("/signin");
+            <motion.button
+              whileTap={{ scale: 0.9 }}
+              onClick={async () => {
+                await logout();
+                nav("/signin", { replace: true });
               }}
-              className="rounded-2xl border border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-700 hover:bg-slate-100"
+              className="flex items-center gap-2 rounded-xl border border-slate-300 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
             >
+              <LogOut size={16} />
               Logout
-            </button>
+            </motion.button>
           </div>
         </div>
       </div>
 
-      {/* content */}
-      <div className="mx-auto w-full max-w-6xl px-4 py-5 pb-28">
+      {/* ============================
+          Main Content
+      ============================ */}
+      <div className="mx-auto w-full max-w-6xl px-4 py-6 pb-32">
         <Outlet />
       </div>
 
-      {/* bottom nav */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200 bg-white/90 backdrop-blur">
-        <div className="mx-auto flex w-full max-w-6xl items-center justify-around px-4 py-3">
-          <NavItem to="/" label="Home" icon="🏠" />
-          <NavItem to="/explore" label="Pay" icon="🧾" />
-          <NavItem to="/history" label="History" icon="🕘" />
-          <NavItem to="/privacy" label="Privacy Policy" icon="🧾" />
+      {/* ============================
+          Floating Bottom Nav
+      ============================ */}
+      <div className="fixed bottom-4 left-0 right-0 z-50 flex justify-center px-4">
+        <div className="flex w-full max-w-4xl items-center justify-around rounded-3xl border border-white/40 bg-white/70 px-4 py-3 shadow-2xl backdrop-blur-xl">
+          <NavItem to="/" label="Home" Icon={Home} end />
+          <NavItem to="/explore" label="Pay" Icon={CreditCard} />
+          <NavItem to="/history" label="History" Icon={History} badge={2} />
+          <NavItem to="/privacy" label="Privacy" Icon={Shield} />
         </div>
       </div>
     </div>
