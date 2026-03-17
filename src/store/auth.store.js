@@ -26,6 +26,7 @@ export const useAuthStore = create((set) => ({
     const res = await loginApi(payload);
     localStorage.setItem("token", res.token);
     set({ user: res.user });
+    return res;      
   },
 
   signup: async (payload) => {

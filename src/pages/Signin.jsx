@@ -42,9 +42,9 @@ export default function Signin() {
 
     try {
       setLoading(true);
-      await login({ phone: phoneDigits, password });
+      const loginRes = await login({ phone: phoneDigits, password });
       const res = await meApi();
-      if (res.role === "ADMIN") {
+      if (loginRes?.user?.role === "ADMIN" || res?.role === "ADMIN"){
         nav("/admin");
       } else {
         toast.success("Welcome back");
